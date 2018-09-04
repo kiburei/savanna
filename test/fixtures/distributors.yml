@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dist_name: MyString
+  dist_contact: MyString
+  dist_float: 9.99
+
+two:
+  dist_name: MyString
+  dist_contact: MyString
+  dist_float: 9.99
