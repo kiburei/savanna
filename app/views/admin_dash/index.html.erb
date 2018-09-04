@@ -1,0 +1,19 @@
+<h1>Admin Dashboard</h1>
+<%= link_to "Add Distributor", add_dist_admin_dash_index_path %>
+<%= link_to "Remove Distributor", remove_dist_admin_dash_index_path %>
+
+<div class="distributor-form">
+  <%= form_tag("/admin_dash/add_dist", method: "POST") do %>
+  <%= label_tag("Distributor Name:") %>
+  <%= text_field_tag(:name) %>
+  <%= label_tag("Distributor Email:") %>
+  <%= text_field_tag(:email) %>
+  <%= label_tag("Distributor Password:") %>
+  <%= text_field_tag(:password) %>
+  <%= label_tag("Distributor Address:") %>
+  <%= text_field_tag(:address) %>
+  <%= label_tag("Distributor Float:") %>
+  <%= text_field_tag(:float) %>
+  <%= submit_tag("Add Distributor") %>
+  <% end %>
+</div>
