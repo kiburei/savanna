@@ -8,6 +8,6 @@ Rails.application.routes.draw do
   end
   resources :orders
   devise_for :admins
-  devise_for :distributors
+  devise_for :distributors, :controllers => { registrations: 'registrations' }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
