@@ -1,19 +1,69 @@
 <h1>Admin Dashboard</h1>
 <%= link_to "Add Distributor", add_dist_admin_dash_index_path %>
-<%= link_to "Remove Distributor", remove_dist_admin_dash_index_path %>
+
 
 <div class="distributor-form">
   <%= form_tag("/admin_dash/add_dist", method: "POST") do %>
   <%= label_tag("Distributor Name:") %>
-  <%= text_field_tag(:name) %>
+  <%= text_field_tag(:dist_name) %>
   <%= label_tag("Distributor Email:") %>
   <%= text_field_tag(:email) %>
   <%= label_tag("Distributor Password:") %>
   <%= text_field_tag(:password) %>
   <%= label_tag("Distributor Address:") %>
-  <%= text_field_tag(:address) %>
+  <%= text_field_tag(:dist_contact) %>
   <%= label_tag("Distributor Float:") %>
-  <%= text_field_tag(:float) %>
+  <%= text_field_tag(:dist_float) %>
   <%= submit_tag("Add Distributor") %>
   <% end %>
 </div>
+
+<h2>Distributors</h2>
+<table>
+  <thead>
+    <th>Distributor Name</th>
+    <th>Distributor Email</th>
+    <th>Distributor Contact</th>
+    <th>Distributor FLoat</th>
+  </thead>
+  <tbody>
+    <% @distributors.each do |d| %>
+      <tr>
+        <td><%= d.dist_name %></td>
+        <td><%= d.email %></td>
+        <td><%= d.dist_contact %></td>
+        <td><%= d.dist_float %></td>
+        <td><%= link_to "Remove Distributor", "/admin_dash/remove_dist/#{d.id}", method: "DELETE", data: {confirm: "Do you want to remove #{d.dist_name} from your distributors?"} %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Orders</h2>
+<table>
+  <thead>
+    <th>Order ID</th>
+    <th>Distributor</th>
+    <th>Quantity</th>
+    <th>Pick-Up Time</th>
+    <th>Order Cost</th>
+    <th>Amount Paid</th>
+    <th>Balance</th>
+    <th>Payment Mode</th>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.distributor %></td>
+        <td><%= order.quantity %></td>
+        <td><%= order.pick_up %></td>
+        <td><%= order.order_cost %></td>
+        <td><%=  %></td>
+        <td><%=  %></td>
+        <td><%=  %></td>
+        <td><%= link_to "Dispatch Order" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

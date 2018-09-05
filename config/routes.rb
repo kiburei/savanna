@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  root "orders#index"
+  # root "orders#index"
   resources :admin_dash do
     collection {
       post :add_dist
-      delete :remove_dist
+      delete "/remove_dist/:id", :to => 'admin_dash#remove_dist'
     }
   end
   resources :orders
