@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_05_121627) do
+ActiveRecord::Schema.define(version: 2018_09_05_125109) do
 
-  create_table "admins", force: :cascade do |t|
+  create_table "admins", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2018_09_05_121627) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
-  create_table "distributors", force: :cascade do |t|
+  create_table "distributors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -39,34 +39,41 @@ ActiveRecord::Schema.define(version: 2018_09_05_121627) do
     t.index ["reset_password_token"], name: "index_distributors_on_reset_password_token", unique: true
   end
 
-  create_table "orders", id: false, force: :cascade do |t|
-    t.integer "order_id", null: false
+  create_table "orders", primary_key: "order_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "quantity"
     t.datetime "pick_up"
     t.decimal "order_cost", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "distributor_id"
+    t.index ["distributor_id"], name: "index_orders_on_distributor_id"
   end
 
-  create_table "payment_channels", id: false, force: :cascade do |t|
-    t.integer "channel_id", null: false
+  create_table "payment_channels", primary_key: "payment_channel_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "channel"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "products", id: false, force: :cascade do |t|
-    t.integer "product_id", null: false
+  create_table "products", primary_key: "product_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.decimal "cost", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "transactions", force: :cascade do |t|
+  create_table "transactions", primary_key: "transaction_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.decimal "amount", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "order_id"
+    t.bigint "payment_channel_id"
+    t.bigint "distributor_id"
+    t.index ["distributor_id"], name: "index_transactions_on_distributor_id"
+    t.index ["order_id"], name: "index_transactions_on_order_id"
+    t.index ["payment_channel_id"], name: "index_transactions_on_payment_channel_id"
   end
 
+  add_foreign_key "orders", "distributors"
+  add_foreign_key "transactions", "distributors"
 end

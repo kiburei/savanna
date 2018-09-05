@@ -1,6 +1,5 @@
 <h1>Admin Dashboard</h1>
-<%= link_to "Add Distributor", add_dist_admin_dash_index_path %>
-
+<%= link_to "Add Distributor" %>
 
 <div class="distributor-form">
   <%= form_tag("/admin_dash/add_dist", method: "POST") do %>
@@ -15,6 +14,18 @@
   <%= label_tag("Distributor Float:") %>
   <%= text_field_tag(:dist_float) %>
   <%= submit_tag("Add Distributor") %>
+  <% end %>
+</div>
+
+<%= link_to "Add Products" %>
+
+<div class="distributor-form">
+  <%= form_tag("/products", method: "POST") do %>
+    <%= label_tag("Product Name:") %>
+    <%= text_field_tag(:name) %>
+    <%= label_tag("Product Price:") %>
+    <%= text_field_tag(:cost) %>
+    <%= submit_tag("Add Product") %>
   <% end %>
 </div>
 
@@ -42,27 +53,47 @@
 <h2>Orders</h2>
 <table>
   <thead>
-    <th>Order ID</th>
+    <th>Order REF</th>
     <th>Distributor</th>
     <th>Quantity</th>
     <th>Pick-Up Time</th>
     <th>Order Cost</th>
     <th>Amount Paid</th>
     <th>Balance</th>
-    <th>Payment Mode</th>
   </thead>
   <tbody>
     <% @orders.each do |order| %>
       <tr>
-        <td><%= order.id %></td>
+        <td><%= order.order_id %></td>
         <td><%= order.distributor %></td>
         <td><%= order.quantity %></td>
         <td><%= order.pick_up %></td>
         <td><%= order.order_cost %></td>
-        <td><%=  %></td>
-        <td><%=  %></td>
-        <td><%=  %></td>
+        <td><%= order.transactions.count %></td>
+        <td><%= order.transactions.count %></td>
         <td><%= link_to "Dispatch Order" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>Payments</h2>
+<table>
+  <thead>
+    <th>Transaction REF</th>
+    <th>Order REF</th>
+    <th>Distributor</th>
+    <th>Amount</th>
+    <th>Payment Channel</th>
+  </thead>
+  <tbody>
+    <% @transactions.each do |transaction| %>
+      <tr>
+        <td><%= transaction.transaction_id %></td>
+        <td><%= transaction.order_id %></td>
+        <td><%= transaction.distributor %></td>
+        <td><%= transaction.amount %></td>
+        <td><%= transaction.channel %></td>
       </tr>
     <% end %>
   </tbody>

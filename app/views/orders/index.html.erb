@@ -1,1 +1,49 @@
-<h1>Orders</h1>
+<h1>Savannah Cement Distributor Portal</h1>
+<% if distributor_signed_in? %>
+  <p>Welcome <%= current_distributor.dist_name %></p>
+  <p>Here you can manage all your interactions with Savannah Cement. You can place orders and make payments at the comfort of your harware or pick-up track :)</p>
+
+  <%= link_to "Make New Order" %>
+  <div class="order_form">
+    <%= form_tag("/orders", method: "POST") do %>
+      <%= label_tag("Select Product:") %>
+      <%= text_field_tag(:product_id) %>
+      <%= label_tag("Quantity:") %>
+      <%= text_field_tag(:quantity) %>
+      <%= label_tag("Pick-Up Time:") %>
+      <%= text_field_tag(:password) %>
+      <%= submit_tag("Place Order") %>
+    <% end %>
+  </div>
+
+  <h2>My Orders</h2>
+  <table>
+    <thead>
+      <th></th>
+    </thead>
+    <tbody>
+      <% @orders.each do |order| %>
+        <tr>
+          <td><%= order.orde_id %></td>
+          <td><%= link_to "Make New Payment" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h2>My Payments</h2>
+  <table>
+    <thead>
+      <th></th>
+    </thead>
+    <tbody>
+      <% @payments.each do |payment| %>
+        <tr>
+          <td><%= payment.payment_id %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>Please get into contact with Savannah Cement so we can create for you a Distributor portal, Thank you</p>
+<% end %>
