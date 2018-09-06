@@ -37,7 +37,7 @@
         <%= text_field_tag(:quantity) %>
         <%= label_tag("Pick-Up Date:") %>
         <%= date_field_tag(:pick_up) %>
-        <%= submit_tag("Place Order") %>
+        <%= submit_tag("Place Order", class: "btn blue") %>
       <% end %>
     </div>
 
@@ -58,8 +58,11 @@
               <%= label_tag("Amount To Pay:") %>
               <%= text_field_tag(:amount, order.cost) %>
               <%= label_tag("Select Payment Mode:") %>
-              <%= select_tag :payment_channel_id, options_for_select(PaymentChannel.all.collect{ |u| [u.channel, u.id] }), class: 'browser-default' %>
-              <%= submit_tag("Make Payment") %>
+              <%= select_tag :payment_channel_id, options_for_select(PaymentChannel.all.collect{ |u| [u.channel, u.payment_channel_id] }), class: 'browser-default', onclick: "paymentOption(id)" %>
+              <div id="options">
+                <p>Instractions to Pay via RTGS</p>
+              </div>
+              <%= submit_tag("Make Payment", class: "btn blue") %>
             <% end %>
           </div>
             <tr>

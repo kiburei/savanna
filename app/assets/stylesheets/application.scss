@@ -19,8 +19,19 @@ $secondary-color: color("yellow", "base") !default;
 @import 'materialize';
 
 #order-form {
-  margin-right: 300px;
-  background-color: Black;
+  margin-right: 1000px;
+}
+
+#products-form {
+  margin-right: 1000px;
+}
+
+#distributor-form {
+  margin-right: 1000px;
+}
+
+.side-nav {
+  background-color: #EBEDEF;
 }
 
 .card {
@@ -31,6 +42,5 @@ $secondary-color: color("yellow", "base") !default;
 }
 
 body {
-  padding-left: 20px;
   padding-right: 20px;
 }

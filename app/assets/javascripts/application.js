@@ -29,6 +29,23 @@ function order_form() {
 }
 
 function payment(id) {
-  console.log(document.getElementById('payment-form-' + id));
   document.getElementById('payment-form-' + id).style.display = "block"
+}
+
+function paymentOption(id) {
+  console.log(id);
+  if (document.getElementById('payment_channel_id').value == 4) {
+    var option = "Instractions to pay via RTGS"
+    document.getElementById('options').innerHTML = option
+  } else if (document.getElementById('payment_channel_id').value == 5) {
+    var option = "Instractions to pay via EFT"
+    document.getElementById('options').innerHTML = option
+  } else if (document.getElementById('payment_channel_id').value == 6) {
+    var option = "Instractions to pay by Check"
+    document.getElementById('options').innerHTML = option
+  } else {
+    var option = "Instractions to pay via Mpesa"
+    document.getElementById('options').innerHTML = option
+  }
+
 }
