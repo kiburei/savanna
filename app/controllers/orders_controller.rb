@@ -4,10 +4,13 @@ class OrdersController < ApplicationController
   def index
     @orders = current_distributor.orders
     @payments = current_distributor.transactions
+    @products = Product.all
   end
 
   def create
-    @order = Order.create!(order_params)
+    @order = current_distributor.orders.build(order_params)
+    @order.cost = Product.find(params[:product].to_i).cost * order_params[:quantity].to_i
+    @order.save
     redirect_to root_url
   end
 

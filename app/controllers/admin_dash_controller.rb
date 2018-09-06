@@ -6,6 +6,7 @@ class AdminDashController < ApplicationController
     @distributors = Distributor.all
     @transactions = Transaction.all
     @orders = Order.all
+    @products = Product.all
   end
 
   def add_dist

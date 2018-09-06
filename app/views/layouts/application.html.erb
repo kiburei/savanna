@@ -6,10 +6,24 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
   <body>
-    <%= yield %>
+    <ul id="slide-out" class="side-nav fixed">
+      <div class="logo">
+        <%= image_tag 'savana' %>
+        <% if admin_signed_in? %>
+          <p>Admin Dashboard</p>
+        <% elsif distributor_signed_in? %>
+          <p>Distributor Portal</p>
+          <p>Welocme <%= current_distributor.dist_name %></p>
+        <% end %>
+
+      </div>
+    </ul>
+    <div class="wrapper">
+      <%= yield %>
+    </div>
   </body>
 </html>

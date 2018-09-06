@@ -14,3 +14,12 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+//= require materialize
+
+function add_dist() {
+  document.getElementById('distributor-form').style.display = "block"
+}
+
+function add_product() {
+  document.getElementById('products-form').style.display = "block"
+}

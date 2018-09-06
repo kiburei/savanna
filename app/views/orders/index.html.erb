@@ -1,49 +1,69 @@
-<h1>Savannah Cement Distributor Portal</h1>
-<% if distributor_signed_in? %>
-  <p>Welcome <%= current_distributor.dist_name %></p>
-  <p>Here you can manage all your interactions with Savannah Cement. You can place orders and make payments at the comfort of your harware or pick-up track :)</p>
-
-  <%= link_to "Make New Order" %>
-  <div class="order_form">
-    <%= form_tag("/orders", method: "POST") do %>
-      <%= label_tag("Select Product:") %>
-      <%= text_field_tag(:product_id) %>
-      <%= label_tag("Quantity:") %>
-      <%= text_field_tag(:quantity) %>
-      <%= label_tag("Pick-Up Time:") %>
-      <%= text_field_tag(:password) %>
-      <%= submit_tag("Place Order") %>
-    <% end %>
-  </div>
-
-  <h2>My Orders</h2>
-  <table>
-    <thead>
-      <th></th>
-    </thead>
-    <tbody>
-      <% @orders.each do |order| %>
-        <tr>
-          <td><%= order.orde_id %></td>
-          <td><%= link_to "Make New Payment" %></td>
-        </tr>
+<div class="wrapper">
+  <h1>Savannah Cement Distributor Portal</h1>
+  <% if distributor_signed_in? %>
+    <%= link_to "Make New Order" %>
+    <div class="order_form">
+      <%= form_tag("/orders", method: "POST") do %>
+        <%= label_tag("Select Product:") %>
+        <%= select_tag :product, options_for_select(@products.collect{ |u| [u.name, u.id] }) %>
+        <%= label_tag("Quantity:") %>
+        <%= text_field_tag(:quantity) %>
+        <%= label_tag("Pick-Up Date:") %>
+        <%= date_field_tag(:pick_up) %>
+        <%= submit_tag("Place Order") %>
       <% end %>
-    </tbody>
-  </table>
+    </div>
 
-  <h2>My Payments</h2>
-  <table>
-    <thead>
-      <th></th>
-    </thead>
-    <tbody>
-      <% @payments.each do |payment| %>
-        <tr>
-          <td><%= payment.payment_id %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>Please get into contact with Savannah Cement so we can create for you a Distributor portal, Thank you</p>
-<% end %>
+    <h2>My Orders</h2>
+    <table>
+      <thead>
+        <th>Order Ref</th>
+        <th>Order Quantity</th>
+        <th>Order Cost</th>
+      </thead>
+      <tbody>
+        <% @orders.each do |order| %>
+          <tr>
+            <td><%= order.order_id %></td>
+            <td><%= order.quantity %></td>
+            <td><%= order.cost %></td>
+            <td><%= link_to "Make New Payment" %></td>
+            <td>
+              <%= form_tag("/orders/#{order.order_id}/transactions", method: "POST") do %>
+                <%= label_tag("Amount To Pay:") %>
+                <%= text_field_tag(:amount, order.cost) %>
+                <%= label_tag("Select Payment Mode:") %>
+                <%= select_tag :payment_channel_id, options_for_select(PaymentChannel.all.collect{ |u| [u.channel, u.id] }) %>
+                <%= submit_tag("Make Payment") %>
+              <% end %>
+            </td>
+
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <h2>My Payments</h2>
+    <table>
+      <thead>
+        <th>Transaction REF</th>
+        <th>Transaction Amount</th>
+        <th>Order REF</th>
+        <th>Payment Channel</th>
+      </thead>
+      <tbody>
+        <% @payments.each do |payment| %>
+          <tr>
+            <td><%= payment.transaction_id %></td>
+            <td><%= payment.amount %></td>
+            <td><%= payment.order_id %></td>
+            <td><%= PaymentChannel.find(payment.payment_channel_id).channel %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>Please get into contact with Savannah Cement so we can create for you a Distributor portal, Thank you</p>
+  <% end %>
+
+</div>
