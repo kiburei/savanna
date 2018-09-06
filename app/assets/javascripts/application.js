@@ -23,3 +23,12 @@ function add_dist() {
 function add_product() {
   document.getElementById('products-form').style.display = "block"
 }
+
+function order_form() {
+  document.getElementById('order-form').style.display = "block"
+}
+
+function payment(id) {
+  console.log(document.getElementById('payment-form-' + id));
+  document.getElementById('payment-form-' + id).style.display = "block"
+}

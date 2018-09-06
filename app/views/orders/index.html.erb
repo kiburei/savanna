@@ -1,11 +1,38 @@
+<h1>Savannah Cement Distributor Portal</h1>
+<div class="row">
+  <div class="col s3">
+    <div class="card red">
+      <h4><%= current_distributor.orders.count %></h4>
+      <h3>My Orders</h3>
+    </div>
+  </div>
+  <div class="col s3">
+    <div class="card blue">
+      <h4>KES <%= number_to_currency(current_distributor.orders.sum(:cost), unit: "KES", separator: ",") %></h4>
+      <h3>Value of Orders</h3>
+    </div>
+  </div>
+  <div class="col s3">
+    <div class="card green">
+      <h4><%= current_distributor.transactions.count %></h4>
+      <h3>Transactions</h3>
+    </div>
+  </div>
+  <div class="col s3">
+    <div class="card brown">
+      <h4><%= number_to_currency(current_distributor.dist_float - current_distributor.transactions.sum(:amount), unit: "KES", separator: ",") %></h4>
+      <h3>Float Balance</h3>
+    </div>
+  </div>
+</div>
 <div class="wrapper">
-  <h1>Savannah Cement Distributor Portal</h1>
+</div>
   <% if distributor_signed_in? %>
-    <%= link_to "Make New Order" %>
-    <div class="order_form">
+  <button class="btn blue" onclick="order_form()">Make Order</button>
+    <div id="order-form" style="display: none">
       <%= form_tag("/orders", method: "POST") do %>
         <%= label_tag("Select Product:") %>
-        <%= select_tag :product, options_for_select(@products.collect{ |u| [u.name, u.id] }) %>
+        <%= select_tag :product, options_for_select(@products.collect{ |u| [u.name, u.id] }), class: 'browser-default' %>
         <%= label_tag("Quantity:") %>
         <%= text_field_tag(:quantity) %>
         <%= label_tag("Pick-Up Date:") %>
@@ -14,54 +41,62 @@
       <% end %>
     </div>
 
-    <h2>My Orders</h2>
-    <table>
-      <thead>
-        <th>Order Ref</th>
-        <th>Order Quantity</th>
-        <th>Order Cost</th>
-      </thead>
-      <tbody>
-        <% @orders.each do |order| %>
-          <tr>
-            <td><%= order.order_id %></td>
-            <td><%= order.quantity %></td>
-            <td><%= order.cost %></td>
-            <td><%= link_to "Make New Payment" %></td>
-            <td>
-              <%= form_tag("/orders/#{order.order_id}/transactions", method: "POST") do %>
-                <%= label_tag("Amount To Pay:") %>
-                <%= text_field_tag(:amount, order.cost) %>
-                <%= label_tag("Select Payment Mode:") %>
-                <%= select_tag :payment_channel_id, options_for_select(PaymentChannel.all.collect{ |u| [u.channel, u.id] }) %>
-                <%= submit_tag("Make Payment") %>
-              <% end %>
-            </td>
+  <div class="row">
+    <div class="col s6">
+      <h2>My Orders</h2>
+      <table>
+        <thead>
+          <th>Order Ref</th>
+          <th>Order Quantity</th>
+          <th>Order Cost</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <% @orders.each do |order| %>
+          <div id="payment-form-<%= order.order_id %>" style="display: none">
+            <%= form_tag("/orders/#{order.order_id}/transactions", method: "POST") do %>
+              <%= label_tag("Amount To Pay:") %>
+              <%= text_field_tag(:amount, order.cost) %>
+              <%= label_tag("Select Payment Mode:") %>
+              <%= select_tag :payment_channel_id, options_for_select(PaymentChannel.all.collect{ |u| [u.channel, u.id] }), class: 'browser-default' %>
+              <%= submit_tag("Make Payment") %>
+            <% end %>
+          </div>
+            <tr>
+              <td><%= order.order_id %></td>
+              <td><%= order.quantity %></td>
+              <td><%= order.cost %></td>
+              <td> <button class="btn blue" onclick="payment(<%= order.order_id %>)">Pay</button> </td>
+            </tr>
 
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+          <% end %>
 
-    <h2>My Payments</h2>
-    <table>
-      <thead>
-        <th>Transaction REF</th>
-        <th>Transaction Amount</th>
-        <th>Order REF</th>
-        <th>Payment Channel</th>
-      </thead>
-      <tbody>
-        <% @payments.each do |payment| %>
-          <tr>
-            <td><%= payment.transaction_id %></td>
-            <td><%= payment.amount %></td>
-            <td><%= payment.order_id %></td>
-            <td><%= PaymentChannel.find(payment.payment_channel_id).channel %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col s6">
+      <h2>My Payments</h2>
+      <table>
+        <thead>
+          <th>Transaction REF</th>
+          <th>Transaction Amount</th>
+          <th>Order REF</th>
+          <th>Payment Channel</th>
+        </thead>
+        <tbody>
+          <% @payments.each do |payment| %>
+            <tr>
+              <td><%= payment.transaction_id %></td>
+              <td><%= payment.amount %></td>
+              <td><%= payment.order_id %></td>
+              <td><%= PaymentChannel.find(payment.payment_channel_id).channel %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
   <% else %>
     <p>Please get into contact with Savannah Cement so we can create for you a Distributor portal, Thank you</p>
   <% end %>

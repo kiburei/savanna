@@ -1,25 +1,31 @@
 <h1>Admin Dashboard</h1>
 <div class="row">
-  <div class="col s4">
+  <div class="col s3">
     <div class="card red">
       <h2><%= Distributor.all.count %></h2>
-      <h3>Distributors</h3>
+      <h2>Distributors</h2>
     </div>
   </div>
-  <div class="col s4">
+  <div class="col s3">
     <div class="card blue">
       <h2><%= Order.all.count %></h2>
-      <h3>Orders Made</h3>
+      <h2>Orders</h2>
     </div>
   </div>
-  <div class="col s4">
+  <div class="col s3">
     <div class="card green">
       <h2><%= Transaction.all.count %></h2>
-      <h3>Transactions Done</h3>
+      <h2>Transactions</h2>
+    </div>
+  </div>
+  <div class="col s3">
+    <div class="card brown">
+      <h2><%= number_to_currency(Transaction.all.sum(:amount), unit: "KES", separator: ",") %></h2>
+      <h2>Payments</h2>
     </div>
   </div>
 </div>
-<button class="btn blue" onclick="add_dist()">Add Distributor</button>
+<button class="btn blue" onclick="add_dist()">New Distributor</button>
 
 <div id="distributor-form" style="display: none">
   <%= form_tag("/admin_dash/add_dist", method: "POST") do %>
@@ -37,7 +43,7 @@
   <% end %>
 </div>
 
-<button class="btn blue" onclick="add_product()">Add Product</button>
+<button class="btn blue" onclick="add_product()">New Product</button>
 <div id="products-form" style="display: none">
   <%= form_tag("/products", method: "POST") do %>
     <%= label_tag("Product Name:") %>
@@ -64,8 +70,8 @@
             <td><%= d.dist_name %></td>
             <td><%= d.email %></td>
             <td><%= d.dist_contact %></td>
-            <td><%= d.dist_float %></td>
-            <td><%= link_to "Remove", "/admin_dash/remove_dist/#{d.id}", class: "btn", method: "DELETE", data: {confirm: "Do you want to remove #{d.dist_name} from your distributors?"} %></td>
+            <td><%= number_to_currency(d.dist_float, unit: "KES", separator: ",") %></td>
+            <td><%= link_to "Remove", "/admin_dash/remove_dist/#{d.id}", class: "btn brown", method: "DELETE", data: {confirm: "Do you want to remove #{d.dist_name} from your distributors?"} %></td>
           </tr>
         <% end %>
       </tbody>
@@ -92,13 +98,13 @@
             <td><%= order.distributor.dist_name %></td>
             <td><%= order.quantity %></td>
             <td><%= order.pick_up %></td>
-            <td><%= order.order_cost %></td>
-            <td><%= order.transactions.count %></td>
+            <td><%= order.cost %></td>
+            <td><%= number_to_currency(order.transactions.sum(:amount), unit: "KES", separator: ",") %></td>
             <% if (order.cost - order.transactions.sum(:amount)) == 0 %>
               <td> <button class="btn green" name="button">Paid</button> </td>
               <td> <button class="btn blue" name="button">Dispatch</button> </td>
             <% else %>
-                <td> <button class="btn red" name="button"><%=  order.cost - order.transactions.sum(:amount) %></button> </td>
+                <td> <button class="btn red" name="button"><%=  number_to_currency(order.cost - order.transactions.sum(:amount), unit: "KES", separator: ",") %></button> </td>
                 <td> <button class="btn blue" disabled>Dispatch</button> </td>
             <% end %>
           </tr>
@@ -126,7 +132,7 @@
             <td><%= transaction.transaction_id %></td>
             <td><%= transaction.order_id %></td>
             <td><%= Distributor.find(transaction.distributor_id).dist_name %></td>
-            <td><%= transaction.amount %></td>
+            <td><%= number_to_currency(transaction.amount, unit: "KES", separator: ",") %></td>
             <td><%= PaymentChannel.find(transaction.payment_channel_id).channel %></td>
           </tr>
         <% end %>
@@ -146,7 +152,7 @@
         <% @products.each do |product| %>
           <tr>
             <td><%= product.name %></td>
-            <td><%= product.cost %></td>
+            <td><%= number_to_currency(product.cost, unit: "KES", separator: ",") %></td>
           </tr>
         <% end %>
       </tbody>

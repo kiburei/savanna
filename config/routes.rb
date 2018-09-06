@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
+  root "orders#index"
   get 'transactions/create'
   get 'products/index'
   get 'products/create'
-  root "orders#index"
   resources :admin_dash do
     collection {
       post :add_dist

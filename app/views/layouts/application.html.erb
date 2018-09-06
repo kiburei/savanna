@@ -10,20 +10,25 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
   <body>
-    <ul id="slide-out" class="side-nav fixed">
-      <div class="logo">
-        <%= image_tag 'savana' %>
-        <% if admin_signed_in? %>
-          <p>Admin Dashboard</p>
-        <% elsif distributor_signed_in? %>
-          <p>Distributor Portal</p>
-          <p>Welocme <%= current_distributor.dist_name %></p>
-        <% end %>
-
+    <div class="row">
+      <div class="col s2">
+        <ul class="side-nav fixed">
+          <div class="logo">
+            <%= image_tag 'savana', width: 200 %>
+            <% if admin_signed_in? %>
+              <h3>Admin Dashboard</h3>
+            <% elsif distributor_signed_in? %>
+              <h3>Distributor Portal</h3>
+              <h5>Welcome <%= current_distributor.dist_name %></h5>
+              <p><%= link_to "Sign Out", destroy_distributor_session_path, method: "DELETE", class: "btn red" %></p>
+            <% end %>
+          </div>
+        </ul>
       </div>
-    </ul>
-    <div class="wrapper">
-      <%= yield %>
+      <div class="col s10">
+          <%= yield %>
+      </div>
     </div>
+
   </body>
 </html>
