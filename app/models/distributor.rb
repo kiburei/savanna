@@ -6,4 +6,5 @@ class Distributor < ApplicationRecord
   has_many :orders
   has_many :transactions
   has_many :distributor_floats
+  has_many :dist_floats
 end

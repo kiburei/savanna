@@ -4,7 +4,7 @@ class AdminDashController < ApplicationController
 
   def index
     @distributors = Distributor.all
-    @transactions = Transaction.all
+    @transactions = DistFloat.all
     @orders = Order.all
     @products = Product.all
   end

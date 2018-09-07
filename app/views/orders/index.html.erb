@@ -8,7 +8,7 @@
   </div>
   <div class="col s3">
     <div class="card blue">
-      <h4>KES <%= number_to_currency(current_distributor.orders.sum(:cost), unit: "KES", separator: ",") %></h4>
+      <h4><%= number_to_currency(current_distributor.orders.sum(:cost), unit: "KES", separator: ",") %></h4>
       <h3>Value of Orders</h3>
     </div>
   </div>
@@ -20,7 +20,8 @@
   </div>
   <div class="col s3">
     <div class="card brown">
-      <h4><%= number_to_currency(current_distributor.transactions.sum(:amount), unit: "KES", separator: ",") %></h4>
+      <% float = current_distributor.dist_floats.sum(:amount).to_i - current_distributor.orders.sum(:cost) %>
+      <h4><%= number_to_currency(float, unit: "KES", separator: ",") %></h4>
       <h3>Float Balance</h3>
     </div>
   </div>
@@ -28,7 +29,11 @@
 <div class="wrapper">
 </div>
   <% if distributor_signed_in? %>
-  <button class="btn blue" onclick="order_form()">Make Order</button>
+  <% if float > 0 %>
+    <button class="btn blue" onclick="order_form()">Make Order</button>
+  <% else %>
+    <button class="btn blue" onclick="order_form()" disabled>Make Order</button>
+  <% end %>
     <div id="order-form" style="display: none">
       <%= form_tag("/orders", method: "POST") do %>
         <%= label_tag("Select Product:") %>
@@ -43,7 +48,7 @@
 
     <button class="btn blue" onclick="payment()">Add Float</button>
     <div id="float-form" style="display: none">
-      <%= form_tag("/distriutor_float", method: "POST") do %>
+      <%= form_tag("/dist_floats", method: "POST") do %>
         <%= label_tag("Amount To Pay:") %>
         <%= text_field_tag(:amount) %>
         <%= label_tag("Select Payment Mode:") %>
@@ -66,7 +71,7 @@
           <th></th>
         </thead>
         <tbody>
-          <% @orders.each do |order| %>
+          <% @orders.reverse.each do |order| %>
             <tr>
               <td><%= order.order_id %></td>
               <td><%= order.quantity %></td>
@@ -85,15 +90,13 @@
         <thead>
           <th>Transaction REF</th>
           <th>Transaction Amount</th>
-          <th>Order REF</th>
           <th>Payment Channel</th>
         </thead>
         <tbody>
-          <% @payments.each do |payment| %>
+          <% @payments.reverse.each do |payment| %>
             <tr>
-              <td><%= payment.transaction_id %></td>
+              <td><%= payment.id %></td>
               <td><%= payment.amount %></td>
-              <td><%= payment.order_id %></td>
               <td><%= PaymentChannel.find(payment.payment_channel_id).channel %></td>
             </tr>
           <% end %>

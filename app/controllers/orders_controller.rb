@@ -3,7 +3,7 @@ class OrdersController < ApplicationController
 
   def index
     @orders = current_distributor.orders
-    @payments = current_distributor.transactions
+    @payments = current_distributor.dist_floats
     @products = Product.all
   end
 

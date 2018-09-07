@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   resources :orders do
     resources :transactions
   end
+  resources :dist_floats do
+    collection { post :admin_float }
+  end
   resources :products
   devise_for :admins
   devise_for :distributors, :controllers => { registrations: 'registrations' }

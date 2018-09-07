@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_05_152032) do
+ActiveRecord::Schema.define(version: 2018_09_07_042012) do
 
   create_table "admins", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 2018_09_05_152032) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "dist_floats", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "amount", default: "0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "distributor_id"
+    t.bigint "payment_channel_id"
+    t.index ["distributor_id"], name: "index_dist_floats_on_distributor_id"
+    t.index ["payment_channel_id"], name: "index_dist_floats_on_payment_channel_id"
   end
 
   create_table "distributors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -75,6 +85,7 @@ ActiveRecord::Schema.define(version: 2018_09_05_152032) do
     t.index ["payment_channel_id"], name: "index_transactions_on_payment_channel_id"
   end
 
+  add_foreign_key "dist_floats", "distributors"
   add_foreign_key "orders", "distributors"
   add_foreign_key "transactions", "distributors"
 end

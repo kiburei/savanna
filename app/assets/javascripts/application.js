@@ -32,6 +32,10 @@ function payment(id) {
   document.getElementById('float-form').style.display = "block"
 }
 
+function float() {
+  document.getElementById('float').style.display = "block"
+}
+
 function paymentOption(id) {
   console.log(id);
   if (document.getElementById('payment_channel_id').value == 4) {
