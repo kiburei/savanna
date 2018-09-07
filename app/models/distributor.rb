@@ -5,4 +5,5 @@ class Distributor < ApplicationRecord
          :recoverable, :rememberable, :validatable
   has_many :orders
   has_many :transactions
+  has_many :distributor_floats
 end

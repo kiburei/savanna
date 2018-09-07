@@ -29,7 +29,7 @@ function order_form() {
 }
 
 function payment(id) {
-  document.getElementById('payment-form-' + id).style.display = "block"
+  document.getElementById('float-form').style.display = "block"
 }
 
 function paymentOption(id) {

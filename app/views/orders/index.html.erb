@@ -20,7 +20,7 @@
   </div>
   <div class="col s3">
     <div class="card brown">
-      <h4><%= number_to_currency(current_distributor.dist_float - current_distributor.transactions.sum(:amount), unit: "KES", separator: ",") %></h4>
+      <h4><%= number_to_currency(current_distributor.transactions.sum(:amount), unit: "KES", separator: ",") %></h4>
       <h3>Float Balance</h3>
     </div>
   </div>
@@ -41,6 +41,20 @@
       <% end %>
     </div>
 
+    <button class="btn blue" onclick="payment()">Add Float</button>
+    <div id="float-form" style="display: none">
+      <%= form_tag("/distriutor_float", method: "POST") do %>
+        <%= label_tag("Amount To Pay:") %>
+        <%= text_field_tag(:amount) %>
+        <%= label_tag("Select Payment Mode:") %>
+        <%= select_tag :payment_channel_id, options_for_select(PaymentChannel.all.collect{ |u| [u.channel, u.payment_channel_id] }), class: 'browser-default', onclick: "paymentOption(id)" %>
+        <div id="options">
+          <p>Instractions to Pay via RTGS</p>
+        </div>
+        <%= submit_tag("Transfer Funds", class: "btn blue") %>
+      <% end %>
+    </div>
+
   <div class="row">
     <div class="col s6">
       <h2>My Orders</h2>
@@ -53,23 +67,10 @@
         </thead>
         <tbody>
           <% @orders.each do |order| %>
-          <div id="payment-form-<%= order.order_id %>" style="display: none">
-            <%= form_tag("/orders/#{order.order_id}/transactions", method: "POST") do %>
-              <%= label_tag("Amount To Pay:") %>
-              <%= text_field_tag(:amount, order.cost) %>
-              <%= label_tag("Select Payment Mode:") %>
-              <%= select_tag :payment_channel_id, options_for_select(PaymentChannel.all.collect{ |u| [u.channel, u.payment_channel_id] }), class: 'browser-default', onclick: "paymentOption(id)" %>
-              <div id="options">
-                <p>Instractions to Pay via RTGS</p>
-              </div>
-              <%= submit_tag("Make Payment", class: "btn blue") %>
-            <% end %>
-          </div>
             <tr>
               <td><%= order.order_id %></td>
               <td><%= order.quantity %></td>
               <td><%= order.cost %></td>
-              <td> <button class="btn blue" onclick="payment(<%= order.order_id %>)">Pay</button> </td>
             </tr>
 
           <% end %>
